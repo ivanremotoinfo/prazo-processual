@@ -1,1 +1,415 @@
 
+<!DOCTYPE html>
+<!-- saved from url=(0070)file:///C:/Users/Ivan%20-%20SuporteADV/Downloads/prazo-processual.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prazo Processual | SuporteADV</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d0d0d; color: #e0e0e0; padding: 24px 16px; }
+  .container { max-width: 700px; margin: 0 auto; }
+
+  .header { text-align: center; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #222; }
+  h1 { font-size: 1.5rem; color: #008080; margin-bottom: 6px; }
+  .subtitle { font-size: 0.88rem; color: #888; line-height: 1.5; }
+  .brand { font-size: 0.78rem; margin-top: 8px; color: #555; }
+  .brand span.s { color: #8B00FF; font-weight: 700; }
+  .brand span.a { color: #008080; font-weight: 700; }
+
+  .card { background: #111; border-radius: 10px; border: 1px solid #222; border-left: 3px solid #8B00FF; padding: 20px 22px; margin-bottom: 14px; transition: border-left-color 0.2s; }
+  .card:hover { border-left-color: #008080; }
+  .card-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #008080; font-weight: 700; margin-bottom: 16px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+  .field.full { grid-column: 1 / -1; }
+
+  .field label { display: block; font-size: 0.78rem; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .field input, .field select {
+    width: 100%; padding: 9px 11px; border: 1.5px solid #333; border-radius: 6px;
+    font-size: 0.95rem; color: #fff; background: #1a1a1a; transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: #008080; box-shadow: 0 0 0 2px rgba(0,128,128,0.2); }
+  .field select option { background: #1a1a1a; }
+
+  /* Prazos rápidos */
+  .prazos-rapidos { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .pr-btn {
+    padding: 6px 14px; border-radius: 6px; border: 1.5px solid #333;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer; color: #888;
+    background: #1a1a1a; transition: all 0.18s; white-space: nowrap;
+  }
+  .pr-btn:hover { border-color: #008080; color: #008080; }
+  .pr-btn.ativo { background: #008080; border-color: #008080; color: #fff; }
+
+  button.calcular {
+    background: #008080; color: #fff; border: none; padding: 10px 26px;
+    border-radius: 6px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.07em;
+    cursor: pointer; transition: background 0.18s, box-shadow 0.18s; text-transform: uppercase;
+  }
+  button.calcular:hover { background: #006666; box-shadow: 0 0 10px rgba(0,128,128,0.4); }
+
+  /* Resultado */
+  .resultado { background: #0a1a0a; border: 1px solid #1a4a1a; border-radius: 10px; padding: 20px 22px; margin-top: 14px; display: none; }
+  .resultado.visible { display: block; }
+  .resultado-titulo { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #008080; font-weight: 700; margin-bottom: 16px; }
+
+  .resultado-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 520px) { .resultado-grid { grid-template-columns: 1fr; } }
+
+  .res-item label { display: block; font-size: 0.72rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .res-item .valor { font-size: 1.05rem; font-weight: 700; color: #00ff00; font-family: 'Courier New', monospace; }
+  .res-item .valor.grande { font-size: 1.4rem; }
+  .res-item .valor.sec { color: #888; font-size: 1rem; }
+  .res-item .valor.alerta { color: #ffaa00; }
+
+  .divider { border: none; border-top: 1px solid #1a3a1a; margin: 14px 0; }
+
+  /* Timeline de prazos */
+  .timeline { margin-top: 14px; }
+  .timeline-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 0; border-bottom: 1px solid #1a1a1a;
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .tl-dia {
+    min-width: 42px; height: 42px; border-radius: 8px;
+    background: #1a1a1a; border: 1.5px solid #333;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; color: #888; text-align: center; flex-direction: column;
+  }
+  .tl-dia.hoje { border-color: #008080; background: #0a1a1a; color: #008080; }
+  .tl-dia.fim { border-color: #00ff00; background: #0a1a0a; color: #00ff00; }
+  .tl-dia.feriado { border-color: #ffaa00; background: #1a150a; color: #ffaa00; }
+  .tl-dia.weekend { border-color: #333; background: #111; color: #444; }
+  .tl-info { flex: 1; }
+  .tl-titulo { font-size: 0.88rem; font-weight: 700; color: #ccc; }
+  .tl-sub { font-size: 0.78rem; color: #666; margin-top: 2px; }
+
+  /* Feriados */
+  .feriados-wrap { margin-top: 12px; }
+  .feriados-wrap summary { cursor: pointer; color: #555; font-size: 0.78rem; }
+  .feriados-wrap ul { margin-top: 8px; padding-left: 16px; }
+  .feriados-wrap li { font-size: 0.78rem; color: #666; padding: 2px 0; }
+
+  .erro { background: #1a0a0a; border: 1px solid #4a1a1a; border-radius: 8px; padding: 14px 16px; color: #ff6666; font-size: 0.88rem; margin-top: 14px; display: none; }
+  .erro.visible { display: block; }
+
+  .aviso { font-size: 0.72rem; color: #444; margin-top: 12px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Prazo Processual</h1>
+    <p class="subtitle">Calcule prazos em dias corridos ou úteis, com exclusão automática de feriados nacionais e finais de semana.</p>
+    <p class="brand"><span class="s">suporte</span><span class="a">ADV</span>.br — Ferramentas para Advogados</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Dados do Prazo</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Data de intimação / início</label>
+        <input type="date" id="dataInicio">
+      </div>
+      <div class="field">
+        <label>Tipo de prazo</label>
+        <select id="tipoPrazo">
+          <option value="uteis">Dias úteis (exclui sáb, dom e feriados)</option>
+          <option value="corridos">Dias corridos (conta tudo)</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Número de dias</label>
+        <input type="number" id="numDias" placeholder="Ex: 15" min="1" max="365" value="15">
+      </div>
+    </div>
+
+    <div class="card-label" style="margin-bottom:10px">Prazos Rápidos</div>
+    <div class="prazos-rapidos">
+      <div class="pr-btn" onclick="setPrazo(5)">5 dias</div>
+      <div class="pr-btn" onclick="setPrazo(10)">10 dias</div>
+      <div class="pr-btn ativo" onclick="setPrazo(15)">15 dias</div>
+      <div class="pr-btn" onclick="setPrazo(30)">30 dias</div>
+      <div class="pr-btn" onclick="setPrazo(60)">60 dias</div>
+      <div class="pr-btn" onclick="setPrazo(90)">90 dias</div>
+      <div class="pr-btn" onclick="setPrazo(120)">120 dias</div>
+      <div class="pr-btn" onclick="setPrazo(180)">180 dias</div>
+    </div>
+
+    <button class="calcular" onclick="calcular()">CALCULAR</button>
+  </div>
+
+  <div class="erro" id="erro"></div>
+
+  <div class="resultado" id="resultado">
+    <div class="resultado-titulo">Resultado do Prazo</div>
+    <div class="resultado-grid">
+      <div class="res-item">
+        <label>Data de início</label>
+        <div class="valor sec" id="res-inicio">—</div>
+      </div>
+      <div class="res-item">
+        <label>Tipo de contagem</label>
+        <div class="valor sec" id="res-tipo">—</div>
+      </div>
+      <div class="res-item">
+        <label>Dias contados</label>
+        <div class="valor sec" id="res-dias">—</div>
+      </div>
+      <div class="res-item">
+        <label>Feriados encontrados</label>
+        <div class="valor sec" id="res-feriados">—</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="res-item" style="text-align:center;margin-bottom:16px">
+      <label style="text-align:center">⚖️ Vencimento do prazo</label>
+      <div class="valor grande" id="res-vencimento">—</div>
+      <div style="font-size:0.8rem;color:#666;margin-top:4px" id="res-dia-semana">—</div>
+    </div>
+
+    <hr class="divider">
+    <div class="resultado-titulo" style="margin-bottom:10px">Marco do Prazo</div>
+    <div class="timeline" id="timeline"></div>
+
+    <details class="feriados-wrap" id="feriados-encontrados-wrap">
+      <summary>Ver feriados considerados no período</summary>
+      <ul id="lista-feriados"></ul>
+    </details>
+
+    <p class="aviso">⚠️ Esta ferramenta considera feriados nacionais fixos e móveis (Carnaval, Páscoa, Corpus Christi). Feriados estaduais e municipais não são incluídos. Sempre confirme os prazos no sistema processual competente.</p>
+  </div>
+
+</div>
+
+<script>
+// Feriados nacionais fixos (dd-mm)
+const feriadosFixos = [
+  { data: '01-01', nome: 'Confraternização Universal' },
+  { data: '21-04', nome: 'Tiradentes' },
+  { data: '01-05', nome: 'Dia do Trabalho' },
+  { data: '07-09', nome: 'Independência do Brasil' },
+  { data: '12-10', nome: 'Nossa Sra. Aparecida' },
+  { data: '02-11', nome: 'Finados' },
+  { data: '15-11', nome: 'Proclamação da República' },
+  { data: '20-11', nome: 'Consciência Negra' },
+  { data: '25-12', nome: 'Natal' },
+];
+
+// Calcula Páscoa pelo algoritmo de Meeus/Jones/Butcher
+function pascoa(ano) {
+  const a = ano % 19;
+  const b = Math.floor(ano / 100);
+  const c = ano % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const mes = Math.floor((h + l - 7 * m + 114) / 31);
+  const dia = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(ano, mes - 1, dia);
+}
+
+function feriadosMoveis(ano) {
+  const p = pascoa(ano);
+  const add = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  return [
+    { data: add(p, -47), nome: 'Carnaval (2ª feira)' },
+    { data: add(p, -48), nome: 'Carnaval (3ª feira)' },
+    { data: add(p, -2),  nome: 'Sexta-feira Santa' },
+    { data: p,           nome: 'Páscoa' },
+    { data: add(p, 60),  nome: 'Corpus Christi' },
+  ];
+}
+
+function isFeriado(date) {
+  const ano = date.getFullYear();
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const chave = `${dd}-${mm}`;
+
+  // Fixo
+  const fixo = feriadosFixos.find(f => f.data === chave);
+  if (fixo) return fixo.nome;
+
+  // Móvel
+  const moveis = feriadosMoveis(ano);
+  const movel = moveis.find(f =>
+    f.data.getDate() === date.getDate() &&
+    f.data.getMonth() === date.getMonth() &&
+    f.data.getFullYear() === date.getFullYear()
+  );
+  if (movel) return movel.nome;
+
+  return null;
+}
+
+function isUtil(date) {
+  const dow = date.getDay();
+  if (dow === 0 || dow === 6) return false;
+  if (isFeriado(date)) return false;
+  return true;
+}
+
+function fmtData(date) {
+  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function diaSemana(date) {
+  return date.toLocaleDateString('pt-BR', { weekday: 'long' });
+}
+
+function setPrazo(n) {
+  document.getElementById('numDias').value = n;
+  document.querySelectorAll('.pr-btn').forEach(b => b.classList.remove('ativo'));
+  event.target.classList.add('ativo');
+}
+
+function showErro(msg) {
+  document.getElementById('erro').textContent = msg;
+  document.getElementById('erro').classList.add('visible');
+  document.getElementById('resultado').classList.remove('visible');
+}
+function hideErro() { document.getElementById('erro').classList.remove('visible'); }
+
+function calcular() {
+  hideErro();
+
+  const dataStr = document.getElementById('dataInicio').value;
+  const tipo = document.getElementById('tipoPrazo').value;
+  const dias = parseInt(document.getElementById('numDias').value);
+
+  if (!dataStr) return showErro('Informe a data de início.');
+  if (!dias || dias < 1) return showErro('Informe um número de dias válido.');
+
+  // No CPC, o prazo começa a contar no dia útil seguinte à intimação
+  const inicio = new Date(dataStr + 'T12:00:00');
+  let contagem = new Date(inicio);
+  contagem.setDate(contagem.getDate() + 1); // começa no dia seguinte
+
+  // Se úteis, pula fim de semana/feriado no início
+  if (tipo === 'uteis') {
+    while (!isUtil(contagem)) {
+      contagem.setDate(contagem.getDate() + 1);
+    }
+  }
+
+  const dataInicioContagem = new Date(contagem);
+  let diasContados = 0;
+  const feriadosNoPeriodo = [];
+
+  while (diasContados < dias) {
+    if (tipo === 'uteis') {
+      const feriado = isFeriado(contagem);
+      const dow = contagem.getDay();
+      if (dow === 0 || dow === 6) {
+        contagem.setDate(contagem.getDate() + 1);
+        continue;
+      }
+      if (feriado) {
+        feriadosNoPeriodo.push({ data: new Date(contagem), nome: feriado });
+        contagem.setDate(contagem.getDate() + 1);
+        continue;
+      }
+    } else {
+      const feriado = isFeriado(contagem);
+      if (feriado) feriadosNoPeriodo.push({ data: new Date(contagem), nome: feriado });
+    }
+    diasContados++;
+    if (diasContados < dias) contagem.setDate(contagem.getDate() + 1);
+  }
+
+  // Se cair em fim de semana ou feriado (dias úteis), avança para próximo útil
+  if (tipo === 'uteis') {
+    while (!isUtil(contagem)) {
+      contagem.setDate(contagem.getDate() + 1);
+    }
+  }
+
+  const vencimento = new Date(contagem);
+
+  // Preenche resultado
+  document.getElementById('res-inicio').textContent = fmtData(inicio);
+  document.getElementById('res-tipo').textContent = tipo === 'uteis' ? 'Dias úteis' : 'Dias corridos';
+  document.getElementById('res-dias').textContent = dias + (tipo === 'uteis' ? ' dias úteis' : ' dias corridos');
+  document.getElementById('res-feriados').textContent = feriadosNoPeriodo.length + ' feriado(s)';
+  document.getElementById('res-vencimento').textContent = fmtData(vencimento);
+  document.getElementById('res-dia-semana').textContent = diaSemana(vencimento).charAt(0).toUpperCase() + diaSemana(vencimento).slice(1);
+
+  // Timeline
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+  const hoje = new Date(); hoje.setHours(12,0,0,0);
+
+  const marcos = [
+    { data: inicio, titulo: 'Intimação / Início', sub: 'Data informada' },
+    { data: dataInicioContagem, titulo: 'Início da contagem', sub: tipo === 'uteis' ? 'Primeiro dia útil após intimação' : 'Dia seguinte à intimação' },
+  ];
+
+  // Marca feriados relevantes
+  feriadosNoPeriodo.slice(0, 3).forEach(f => {
+    marcos.push({ data: f.data, titulo: f.nome, sub: 'Feriado nacional — não contado', tipo: 'feriado' });
+  });
+
+  marcos.push({ data: vencimento, titulo: 'Vencimento do Prazo', sub: `${dias} ${tipo === 'uteis' ? 'dias úteis' : 'dias corridos'} a partir da intimação`, tipo: 'fim' });
+  marcos.sort((a, b) => a.data - b.data);
+
+  marcos.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'timeline-item';
+
+    let cls = '';
+    if (m.tipo === 'fim') cls = 'fim';
+    else if (m.tipo === 'feriado') cls = 'feriado';
+    else if (m.data.toDateString() === hoje.toDateString()) cls = 'hoje';
+
+    div.innerHTML = `
+      <div class="tl-dia ${cls}">
+        <span>${String(m.data.getDate()).padStart(2,'0')}</span>
+        <span style="font-size:0.65rem">${m.data.toLocaleDateString('pt-BR',{month:'short'})}</span>
+      </div>
+      <div class="tl-info">
+        <div class="tl-titulo">${m.titulo}</div>
+        <div class="tl-sub">${m.sub} — ${fmtData(m.data)}</div>
+      </div>`;
+    tl.appendChild(div);
+  });
+
+  // Lista de feriados
+  const ul = document.getElementById('lista-feriados');
+  ul.innerHTML = '';
+  if (feriadosNoPeriodo.length === 0) {
+    ul.innerHTML = '<li>Nenhum feriado nacional no período.</li>';
+  } else {
+    feriadosNoPeriodo.forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = `${fmtData(f.data)} — ${f.nome}`;
+      ul.appendChild(li);
+    });
+  }
+
+  document.getElementById('resultado').classList.add('visible');
+}
+
+// Data de hoje como padrão
+document.getElementById('dataInicio').value = new Date().toISOString().split('T')[0];
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const f = document.activeElement;
+    if (f && (f.tagName === 'INPUT' || f.tagName === 'SELECT')) calcular();
+  }
+});
+</script>
+
+
+</body></html>
